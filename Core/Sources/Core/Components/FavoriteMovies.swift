@@ -5,10 +5,13 @@ public struct FavoriteMovies {
     
     
     mutating func reduce(_ action: Action) {
-        if let action = action as? AddToFavorite {
+        switch action {
+        case let action as AddToFavorite:
             favorites.insert(action.id)
-        } else if let action = action as? RemoveFromFavorites {
+        case let action as RemoveFromFavorites:
             favorites.remove(action.id)
+        default:
+            break
         }
     }
 }

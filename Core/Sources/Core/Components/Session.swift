@@ -3,12 +3,15 @@ public struct Session {
     public var session: String?
     
     mutating func reduce(_ action: Action) {
-        if let action = action as? ReceiveToken {
+        switch action {
+        case let action as ReceiveToken:
             token = action.token
-        } else if let action = action as? ReceiveSession {
+        case let action as ReceiveSession:
             session = action.session
-        } else if action is Logout {
+        case _ as Logout:
             self = Session()
+        default:
+            break
         }
     }
 }
