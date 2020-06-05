@@ -58,8 +58,8 @@ struct MovieDetailsConnector: Connector {
                 get: { state.favoriteMovies.favorites.contains(self.id) },
                 set: { value in
                     let action = value
-                        ? RemoveFromFavorites(id: self.id) as Action
-                        : AddToFavorite(id: self.id) as Action
+                        ? AddToFavorite(id: self.id) as Action
+                        : RemoveFromFavorites(id: self.id) as Action
                     return store.dispatch(action)
             })
         )
