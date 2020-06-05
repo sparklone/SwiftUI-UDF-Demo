@@ -75,17 +75,24 @@ import Core
 // TODO: 1 - Implement login flow connector
 struct LoginConnector: Connector {
     func map(state: AppState, store: EnvironmentStore) -> some View {
-        Login(
+        let usernameSetAction = { username in
+            UpdateUsername(username: username)
+        }
+
+        let passwordSetAction = { password in
+            UpdatePassword(password: password)
+        }
+        return Login(
             username: Binding(
                 get: { state.loginForm.username },
-                set: store.bind(Action.updateUsername)),
-            
+                set: store.bind(usernameSetAction)),
+
             password: Binding(
                 get: { state.loginForm.password },
-                set: store.bind(Action.updatePassword)),
-            
+                set: store.bind(passwordSetAction)),
+
             loginAction: state.loginForm.isCredentialsOk
-                ? .available(store.bind(.login))
+                ? .available(store.bind(ActionLogin()))
                 : .unavailable,
             loginProgress: state.loginProgress)
     }

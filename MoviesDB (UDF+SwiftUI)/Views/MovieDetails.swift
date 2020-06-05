@@ -1,4 +1,5 @@
 import SwiftUI
+import Core
 
 struct MovieDetails: View {
     let title: String
@@ -55,7 +56,12 @@ struct MovieDetailsConnector: Connector {
             overview: movie.description,
             isFavorite: Binding(
                 get: { state.favoriteMovies.favorites.contains(self.id) },
-                set: { store.dispatch($0 ? .removeFromFavorites(self.id) : .addToFavorite(self.id)) })
+                set: { value in
+                    let action = value
+                        ? RemoveFromFavorites(id: self.id) as Action
+                        : AddToFavorite(id: self.id) as Action
+                    return store.dispatch(action)
+            })
         )
     }
 }

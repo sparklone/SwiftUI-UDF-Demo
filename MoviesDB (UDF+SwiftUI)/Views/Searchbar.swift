@@ -1,4 +1,5 @@
 import SwiftUI
+import Core
 
 struct Searchbar: View {
     @Binding var query: String
@@ -36,13 +37,16 @@ struct Searchbar_Previews: PreviewProvider {
 
 struct SearchbarConnector: Connector {
     func map(state: AppState, store: EnvironmentStore) -> some View {
-        Searchbar(
+        let querySetAction = { query in
+            UpdateSearchQuery(query: query)
+        }
+        return Searchbar(
             query: Binding(
                 get: { state.searchResults.query },
-                set: store.bind(Action.updateSearchQuery)
+                set: store.bind(querySetAction)
             ),
             cancel: state.searchResults.canClearSearch
-                ? store.bind(.clearSearchQuery)
+                ? store.bind(ClearSearchQuery())
                 : nil
         )
     }

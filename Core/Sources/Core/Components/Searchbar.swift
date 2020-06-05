@@ -28,26 +28,19 @@ public struct Searchbar {
     }
     
     mutating func reduce(_ action: Action) {
-        switch action {
-            
-        case .updateSearchQuery(let value):
+        if let action = action as? UpdateSearchQuery {
             self = Searchbar()
-            query = value
-            
+            query = action.query
             if canStartSearch { request = UUID() }
-            
-        case .clearSearchQuery:
+        } else if action is ClearSearchQuery {
             self = Searchbar()
-            
-        case .receiveSearchPage(let page):
+        } else if let action = action as? ReceiveSearchPage {
+            let page = action.moviesPage
             results += page.movies.map(\.id)
             currentPage = page.page
             totalPages = page.totalPages
-            
-        case .requestNextSearchPage where canRequestNextPage:
+        } else if action is RequestNextSearchPage, canRequestNextPage {
             request = UUID()
-            
-        default: break
         }
     }
 }

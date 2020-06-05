@@ -17,18 +17,15 @@ public struct MoviesList {
     }
     
     mutating func reduce(_ action: Action) {
-        switch action {
-            
-        case let .receiveMoviesPage(page):
+
+        if let action = action as? ReceiveMoviesPage {
+            let page = action.moviePage
             request = nil
             ids += page.movies.map(\.id)
             currentPage = page.page
             totalPages = page.totalPages
-            
-        case .requestNextMoviesPage where request == nil:
+        } else if action is RequestNextMoviesPage, request == nil {
             request = UUID()
-            
-        default: break
         }
     }
 }

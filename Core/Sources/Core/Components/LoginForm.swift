@@ -7,11 +7,12 @@ public struct LoginForm {
     }
     
     mutating func reduce(_ action: Action) {
-        switch action {
-        case .updateUsername(let value): username = value
-        case .updatePassword(let value): password = value
-        case .logout: self = LoginForm()
-        default: break
+        if let action = action as? UpdateUsername {
+            username = action.username
+        } else if let action = action as? UpdatePassword {
+            password = action.password
+        } else if let _ = action as? Logout {
+            self = LoginForm()
         }
     }
 }
